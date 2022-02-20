@@ -18,5 +18,4 @@ contract MindDefnft is ERC1155{
         _mint(msg.sender, nft, 1, "");
         nft++;
     }
-
 }
