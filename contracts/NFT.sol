@@ -7,6 +7,7 @@ contract MindDefnft is ERC1155{
     uint256 public goldCoin = 0;
     uint256 public nft = 1;
     address internal owner;
+    mapping(uint256=>string) public nft_uri;
 
     constructor(address _owner)ERC1155("MindDef_nft"){
         owner = _owner;

@@ -1,8 +1,34 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { nftaddress, nftmarketaddress } from "../config";
+import NFT from "../artifacts/contracts/NFT.sol/MindDefnft.json";
+import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.json";
+import { useEffect } from 'react';
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+
 
 export default function Home() {
+  
+  useEffect(()=>{
+    a();
+  })
+  let a = async ()=>{
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    let MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
+    let marketContract = await MarketContract.fetchMyNFT();
+    console.log("marketContract",marketContract);
+    let a = await MarketContract.idToMarketItem[0]
+    let q =await MarketContract.totalNft()
+    console.log(MarketContract, q);
+
+  }
+
+
   return (
     <div className={styles.container}>
       <Head>
