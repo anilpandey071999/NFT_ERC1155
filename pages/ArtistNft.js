@@ -28,8 +28,8 @@ export default function Home() {
       signer
     );
     console.log(marketContract,marketId);
-    let marketContract = await MarketContract.listForSale(marketId-1);
-    console.log(marketContract);
+    let marketContract = await MarketContract.listForSale(marketId - 1);
+    // console.log(marketContract);
   }
   let getListedNft = async () => {
     const web3Modal = new Web3Modal();
@@ -46,10 +46,10 @@ export default function Home() {
       marketContract.map(async (i) => {
         //   console.log(i);
         const meta = await axios.get(i.uri);
-        console.log(i);
+        // console.log(i);
         let item = {
           price: meta.data.price,
-          nftId:parseInt(i.nftID.toString()) - 1,
+          nftId:parseInt(i.nftID.toString()),
           name: meta.data.name,
           image: meta.data.image,
           description: meta.data.description,

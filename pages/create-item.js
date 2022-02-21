@@ -67,13 +67,13 @@ export default function CreateItem() {
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
       let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      let nftId = await contract.nft();
       let tx = await contract.mintnft();
       tx = await tx.wait();
       console.log(tx);
 
       let MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
-      let q = await contract.nft();
-      tx = await MarketContract.addNftCollection(q,price,url);
+      tx = await MarketContract.addNftCollection(nftId,price,url);
       console.log(tx);
     } catch (error) {
       console.log("Error uploading file: ", error);

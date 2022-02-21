@@ -39,7 +39,7 @@ event add(uint256 total);
         totalNft++;
     }
 
-    function listingForSell(uint256 marketId) public{
+    function DelistingForSell(uint256 marketId) public{
         require(totalNft >= marketId,"Invalid MarketId");
         idToMarketItem[marketId].openForSell = false;
     }
@@ -67,13 +67,13 @@ event add(uint256 total);
         // uint totalItemCount = totalNft ;
         uint currentIndex = 0;
         for (uint256 index = 0; index < totalNft; index++) {
-            if(idToMarketItem[index].seller == msg.sender && idToMarketItem[index].openForSell){
+            if(idToMarketItem[index].openForSell){
                 itemCount += 1;
             }
         }
         MarketItem[] memory items = new MarketItem[](itemCount);
         for (uint256 index = 0; index < totalNft; index++) {
-            if(idToMarketItem[index].seller == msg.sender && idToMarketItem[index].openForSell){
+            if(idToMarketItem[index].openForSell){
                 MarketItem storage currentItem = idToMarketItem[index];
                 items[currentIndex] = currentItem;
                 currentIndex += 1;
@@ -83,15 +83,15 @@ event add(uint256 total);
     }
 
     function getAllNft() public view returns(MarketItem[] memory){
-          uint itemCount  = 0;
-        // uint totalItemCount = totalNft ;
+        //   uint itemCount  = 0;
+        // // uint totalItemCount = totalNft ;
         uint currentIndex = 0;
-        for (uint256 index = 0; index < totalNft; index++) {
-            if(idToMarketItem[index].seller == msg.sender){
-                itemCount += 1;
-            }
-        }
-        MarketItem[] memory items = new MarketItem[](itemCount);
+        // for (uint256 index = 0; index < totalNft; index++) {
+        //     if(idToMarketItem[index].seller == msg.sender){
+        //         itemCount += 1;
+        //     }
+        // }
+        MarketItem[] memory items = new MarketItem[](totalNft);
         for (uint256 index = 0; index < totalNft; index++) {
             // if(idToMarketItem[index].seller == msg.sender && idToMarketItem[index].openForSell){
                 MarketItem storage currentItem = idToMarketItem[index];
