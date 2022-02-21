@@ -53,10 +53,11 @@ export default function CreateItem() {
     const data = JSON.stringify({
       name,
       description,
+      price,
       image: fileUrl,
     });
     try {
-      const added = client.add(data);
+      const added = await client.add(data);
       console.log("data:-", data);
       console.log(added);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
@@ -72,7 +73,7 @@ export default function CreateItem() {
 
       let MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
       let q = await contract.nft();
-      tx = await MarketContract.addNftCollection(q,url);
+      tx = await MarketContract.addNftCollection(q,price,url);
       console.log(tx);
     } catch (error) {
       console.log("Error uploading file: ", error);
