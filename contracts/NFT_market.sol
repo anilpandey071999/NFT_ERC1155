@@ -59,6 +59,7 @@ event add(uint256 total);
         require(idToMarketItem[_totalNft].price <= amount,"Please pay listed amount");
         ERC1155(nftContract).safeTransferFrom(to,from,0, amount, "0x00");
         ERC1155(nftContract).safeTransferFrom(from, to, id, 1, "0x00");
+        idToMarketItem[id-1].seller = to;
     }
 
 // event o(uint totalItemCount );

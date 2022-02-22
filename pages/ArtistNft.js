@@ -41,6 +41,13 @@ export default function Home() {
       Market.abi,
       signer
     );
+    let chackUserApprovel = await TokenContract.isApprovedForAll(
+      to,
+      nftaddress
+    );
+    if(!chackUserApprovel){
+      
+    }
     let marketContract = await MarketContract.getAllNft();
     const items = await Promise.all(
       marketContract.map(async (i) => {
