@@ -56,7 +56,7 @@ export default function CreateItem() {
       }
     } catch (error) {
       console.log("Error uploading file: ", error);
-      setError(error);
+      setError(error.Error);
       setInterval(() => {
         setError(null);
       }, 3000);

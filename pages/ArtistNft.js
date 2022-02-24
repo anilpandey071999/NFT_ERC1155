@@ -12,11 +12,14 @@ import * as axios from "axios";
 export default function Home() {
   const [loadingState, setLoadingState] = useState("not-loaded");
   const [nfts, setNfts] = useState([]);
+  const [price, setPrice] = useState(0);
+
 
   useEffect(() => {
     getListedNft();
   });
-  async  function listnft(marketId){
+  async  function listnft(marketId,_price){
+    let price = _price || 0
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -27,7 +30,7 @@ export default function Home() {
       signer
     );
     console.log(marketContract,marketId);
-    let marketContract = await MarketContract.listForSale(marketId - 1);
+    let marketContract = await MarketContract.listForSale(marketId - 1,price);
     // console.log(marketContract);
   }
   let getListedNft = async () => {
@@ -47,7 +50,7 @@ export default function Home() {
         const meta = await axios.get(i.uri);
         // console.log(i);
         let item = {
-          price: meta.data.price,
+          price: parseInt(i.price),
           nftId:parseInt(i.nftID.toString()),
           name: meta.data.name,
           image: meta.data.image,
@@ -87,9 +90,16 @@ export default function Home() {
                 <p className="text-2xl mb-4 font-bold text-white">
                   {nft.price} MD
                 </p>
-                <button
+                <input
+          placeholder="Listing Price"
+          className="sm-2 border rounded p-4"
+          onChange={(e) =>
+            setPrice(e.target.value)
+          }
+        />
+              <button
                   className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-                  onClick={() => listnft(nft.nftId)}
+                  onClick={() => listnft(nft.nftId,price)}
                 >
                   {nft.title}
                 </button>

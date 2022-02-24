@@ -14,10 +14,31 @@ export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [account, setAccount] = useState(null);
   useEffect(() => {
-    getListedNft();
+    checkNetwork();
   });
+
+  const checkNetwork = async () => {
+    if (window.ethereum) {
+      const currentChainId = await window.ethereum.request({
+        method: 'eth_chainId',
+      });
+  
+      // return true if network id is the same
+      if (currentChainId != 4) {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x4' }], // chainId must be in hexadecimal numbers
+        });
+      }
+      getListedNft()
+      // return false is network id is different
+      return true;
+    }
+  };
+
   let getListedNft = async () => {
-    console.log("lol");
+    console.log("KKKKKKKKkk1");
+
     let [to] = await ethereum.request({ method: "eth_requestAccounts" });
     setAccount(to);
 
@@ -25,6 +46,7 @@ export default function Home() {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
+    
     let MarketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,
@@ -38,7 +60,7 @@ export default function Home() {
         try {
           const meta = await axios.get(i.uri);
           item = {
-            price: meta.data.price,
+            price: parseInt(i.price),
             nftId: parseInt(i.nftID.toString()),
             name: meta.data.name,
             image: meta.data.image,
