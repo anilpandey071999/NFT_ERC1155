@@ -32,12 +32,16 @@ export default function CreateItem() {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       console.log(url);
       setFileUrl(url);
-      let owner = await MarketContract.owner();
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+      
       let [to] = await ethereum.request({ method: "eth_requestAccounts" });
       // console.log(owner, to, marketId, price, "0x00");
       let TokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
-      let balance = await TokenContract.balanceOf(owner, marketId);
-      console.log("balance", balance);
+      // let balance = await TokenContract.balanceOf(owner, marketId);
+      // console.log("balance", balance);
       
       let chackUserApprovel = await TokenContract.isApprovedForAll(
         to,
@@ -84,11 +88,11 @@ export default function CreateItem() {
       const signer = provider.getSigner();
       let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
       let nftId = await contract.nft();
-      let tx = await contract.mintnft();
-      tx = await tx.wait();
-      console.log(tx);
-
-      let MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
+      // let tx = await contract.mintnft();
+      // tx = await tx.wait();
+      // console.log(tx);
+      const MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
+      let owner = await MarketContract.owner();
       tx = await MarketContract.addNftCollection(nftId,price,url);
       console.log(tx);
     } catch (error) {

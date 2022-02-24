@@ -20,7 +20,6 @@ export default function Home() {
     console.log("lol");
     let [to] = await ethereum.request({ method: "eth_requestAccounts" });
     setAccount(to);
-    
 
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -38,22 +37,20 @@ export default function Home() {
         let item;
         try {
           const meta = await axios.get(i.uri);
-         item = {
-          price: meta.data.price,
-          nftId: parseInt(i.nftID.toString()),
-          name: meta.data.name,
-          image: meta.data.image,
-          description: meta.data.description,
-          seller: i.seller,
-          buttonTital:
-            parseInt(account) != parseInt(i.seller) ? "Buy" : "Owned By you",
-        };
-        return item;
-
+          item = {
+            price: meta.data.price,
+            nftId: parseInt(i.nftID.toString()),
+            name: meta.data.name,
+            image: meta.data.image,
+            description: meta.data.description,
+            seller: i.seller,
+            buttonTital:
+              parseInt(account) != parseInt(i.seller) ? "Buy" : "Owned By you",
+          };
+          return item;
         } catch (error) {
           console.log(error);
-        };
-        
+        }
       })
     );
     // console.log(items);
@@ -79,29 +76,28 @@ export default function Home() {
     let TokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let balance = await TokenContract.balanceOf(owner, marketId);
     console.log("balance", balance);
-    
+
     let chackUserApprovel = await TokenContract.isApprovedForAll(
       to,
       nftmarketaddress
     );
-    if(!chackUserApprovel){
+    if (!chackUserApprovel) {
       let token = await TokenContract.setApprovalForAll(nftmarketaddress, true);
-    console.log(token);
-    await token.wait()
+      console.log(token);
+      await token.wait();
     }
-    console.log("->>",chackUserApprovel,chackOwnerApprovel);
-
-    if (chackUserApprovel == true && chackOwnerApprovel == true) {
+    console.log("->>", chackUserApprovel);
+    if (chackUserApprovel == true) {
       let marketContract = await MarketContract.buynft(
         owner,
         to,
         marketId,
         price,
-        marketId-1
+        marketId - 1
       );
       console.log(marketContract);
-    }else{
-      console.log(chackUserApprovel,chackOwnerApprovel);
+    } else {
+      console.log(chackUserApprovel);
     }
   };
 
@@ -127,7 +123,7 @@ export default function Home() {
               </div>
               <div className="p-4 bg-black">
                 <p className="text-2xl mb-4 font-bold text-white">
-                  {nft.price} ETH
+                  {nft.price} MD
                 </p>
                 <button
                   className="w-full bg-blue-500 text-white font-bold py-2 px-12 rounded"

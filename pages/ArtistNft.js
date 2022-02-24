@@ -41,13 +41,6 @@ export default function Home() {
       Market.abi,
       signer
     );
-    // let chackUserApprovel = await TokenContract.isApprovedForAll(
-    //   to,
-    //   nftaddress
-    // );
-    // if(!chackUserApprovel){
-      
-    // }
     let marketContract = await MarketContract.getAllNft();
     const items = await Promise.all(
       marketContract.map(async (i) => {
@@ -93,7 +86,7 @@ export default function Home() {
               </div>
               <div className="p-4 bg-black">
                 <p className="text-2xl mb-4 font-bold text-white">
-                  {nft.price} ETH
+                  {nft.price} MD
                 </p>
                 <button
                   className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"

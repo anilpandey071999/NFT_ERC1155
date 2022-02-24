@@ -27,6 +27,7 @@ contract MindDefMarketPlace{
     }
 event add(uint256 total);
     function addNftCollection(uint256 _nftID,uint256 _price,string memory _uri) public {
+        MindDefnft(nftContract).mintnft(msg.sender);
         idToMarketItem[totalNft] = MarketItem({
             nftID:_nftID,
             price: _price,
@@ -84,14 +85,7 @@ event add(uint256 total);
     }
 
     function getAllNft() public view returns(MarketItem[] memory){
-        //   uint itemCount  = 0;
-        // // uint totalItemCount = totalNft ;
         uint currentIndex = 0;
-        // for (uint256 index = 0; index < totalNft; index++) {
-        //     if(idToMarketItem[index].seller == msg.sender){
-        //         itemCount += 1;
-        //     }
-        // }
         MarketItem[] memory items = new MarketItem[](totalNft);
         for (uint256 index = 0; index < totalNft; index++) {
             // if(idToMarketItem[index].seller == msg.sender && idToMarketItem[index].openForSell){

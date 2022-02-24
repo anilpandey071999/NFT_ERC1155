@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 contract MindDefnft is ERC1155{
     uint256 public goldCoin = 0;
     uint256 public nft = 1;
-    address internal owner;
+    address public owner;
     mapping(uint256=>string) public nft_uri;
 
     constructor(address _owner)ERC1155("MindDef_nft"){
@@ -14,9 +14,9 @@ contract MindDefnft is ERC1155{
         _mint(msg.sender, goldCoin, 10**18, "");
     }
 
-    function mintnft() public {
-        require(msg.sender == owner,"Only for the Owner");
-        _mint(msg.sender, nft, 1, "");
+    function mintnft(address sender ) public {
+        require(sender == owner,"Only for the Owner");
+        _mint(sender, nft, 1, "");
         nft++;
     }
 }
