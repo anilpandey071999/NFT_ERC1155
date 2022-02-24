@@ -54,6 +54,8 @@ contract MindDefMarketPlace{
         ERC1155(nftContract).safeTransferFrom(to,from,0, amount, "0x00");
         ERC1155(nftContract).safeTransferFrom(from, to, id, 1, "0x00");
         idToMarketItem[id-1].seller = to;
+        idToMarketItem[id - 1].openForSell = false;
+        idToMarketItem[id - 1].sold = true;
     }
 
 // event o(uint totalItemCount );
