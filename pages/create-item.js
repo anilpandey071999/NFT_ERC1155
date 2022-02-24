@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
+import styles from  "../styles/load.module.css"
+
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -14,7 +16,7 @@ import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.jso
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
   const [showError, setError] = useState(null);
-
+  const [isLoading,setLoader] = useState(false);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -88,13 +90,14 @@ export default function CreateItem() {
       const signer = provider.getSigner();
       let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
       let nftId = await contract.nft();
-      // let tx = await contract.mintnft();
-      // tx = await tx.wait();
-      // console.log(tx);
       const MarketContract = new ethers.Contract(nftmarketaddress,Market.abi, signer)
       let owner = await MarketContract.owner();
-      tx = await MarketContract.addNftCollection(nftId,price,url);
-      console.log(tx);
+      let tx = await MarketContract.addNftCollection(nftId,price,url);
+      // console.log(await tx);
+      // console.log(await tx.wait());
+      setLoader(true);
+      console.log(await tx.wait());
+      setLoader(false)
     } catch (error) {
       console.log("Error uploading file: ", error);
       setError(error.Error);
@@ -102,13 +105,15 @@ export default function CreateItem() {
         setError(null);
       }, 3000);
     }
+
   }
+
+  if(isLoading) return <div className={styles.loader}></div>
 
   return (
     <div className="flex justify-center">
       <div className="w-1/2 flex flex-col pb-12">
         <p className="text-2xl font-bold">{showError}</p>
-
         <input
           placeholder="Asset Name"
           className="mt-8 border rounded p-4"

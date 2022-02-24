@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+// import '../styles/load.css'
 import Link from 'next/link'
 import { useState,useEffect } from "react";
 import Web3Modal from "web3modal";
