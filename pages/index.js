@@ -4,10 +4,9 @@ import styles from "../styles/Home.module.css";
 import { nftaddress, nftmarketaddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/MindDefnft.json";
 import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.json";
-import { useEffect } from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as axios from "axios";
 
 export default function Home() {
@@ -33,39 +32,6 @@ export default function Home() {
       signer
     );
     let marketContract = await MarketContract.getListedNft();
-
-    let TokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
-
-    let chackOwnerApprovel = await TokenContract.isApprovedForAll(
-      to,
-      nftaddress
-    );
-
-    if(!chackOwnerApprovel){
-       await TokenContract.setApprovalForAll(nftaddress, true);
-    }
-    let owner = await MarketContract.owner();
-    let chackUserApprovel = await TokenContract.isApprovedForAll(
-      to,
-      nftmarketaddress
-    );
-    if(!chackUserApprovel){
-      let token = await TokenContract.setApprovalForAll(nftmarketaddress, true);
-    console.log(token);
-    await token.wait()
-    }
-    // console.log("->>",chackUserApprovel)
-    // chackOwnerApprovel = await TokenContract.isApprovedForAll(
-    //   to,
-    //   owner
-    // );
-    // if(!chackOwnerApprovel){
-    //   await TokenContract.setApprovalForAll(owner, true);
-    // }
-    // console.log("marketContract",marketContract);
-    // let TokenContract = new ethers.Contract(nftaddress,NFT.abi, signer)
-    //  let token = await TokenContract.setApprovalForAll(nftaddress,true)
-    // console.log("token",token);
 
     const items = await Promise.all(
       marketContract.map(async (i) => {
@@ -114,16 +80,12 @@ export default function Home() {
     let balance = await TokenContract.balanceOf(owner, marketId);
     console.log("balance", balance);
     
-    let chackOwnerApprovel = await TokenContract.isApprovedForAll(
-      owner,
-      nftmarketaddress
-    );
     let chackUserApprovel = await TokenContract.isApprovedForAll(
       to,
       nftmarketaddress
     );
     if(!chackUserApprovel){
-      let token = await TokenContract.setApprovalForAll(nftaddress, true);
+      let token = await TokenContract.setApprovalForAll(nftmarketaddress, true);
     console.log(token);
     await token.wait()
     }

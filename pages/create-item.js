@@ -32,6 +32,22 @@ export default function CreateItem() {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       console.log(url);
       setFileUrl(url);
+      let owner = await MarketContract.owner();
+      let [to] = await ethereum.request({ method: "eth_requestAccounts" });
+      // console.log(owner, to, marketId, price, "0x00");
+      let TokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      let balance = await TokenContract.balanceOf(owner, marketId);
+      console.log("balance", balance);
+      
+      let chackUserApprovel = await TokenContract.isApprovedForAll(
+        to,
+        nftmarketaddress
+      );
+      if(!chackUserApprovel){
+        let token = await TokenContract.setApprovalForAll(nftmarketaddress, true);
+      console.log(token);
+      await token.wait()
+      }
     } catch (error) {
       console.log("Error uploading file: ", error);
       setError(error);
