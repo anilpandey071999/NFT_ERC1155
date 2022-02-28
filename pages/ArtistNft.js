@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { nftaddress, nftmarketaddress } from "../config";
-import NFT from "../artifacts/contracts/NFT.sol/MindDefnft.json";
+import styles from  "../styles/load.module.css"
 import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.json";
 import { useEffect } from "react";
 import Web3Modal from "web3modal";
@@ -13,7 +13,7 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState("not-loaded");
   const [nfts, setNfts] = useState([]);
   const [price, setPrice] = useState(0);
-
+  const [isLoading,setLoader] = useState(false)
 
   useEffect(() => {
     getListedNft();
@@ -29,8 +29,11 @@ export default function Home() {
       Market.abi,
       signer
     );
-    console.log(marketContract,marketId);
+    // console.log(marketContract,marketId);
     let marketContract = await MarketContract.listForSale(marketId - 1,price);
+    setLoader(true)
+    console.log(await marketContract.wait());
+    setLoader(false)
     // console.log(marketContract);
   }
   let getListedNft = async () => {
@@ -68,6 +71,9 @@ export default function Home() {
 
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
+
+  if(isLoading) return <div className={styles.loader}></div>
+
   return (  
     <div className="flex justify-center">
       <div className="px-4" style={{ maxWidth: "1600px" }}>

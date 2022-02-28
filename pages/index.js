@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from  "../styles/load.module.css"
 import { nftaddress, nftmarketaddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/MindDefnft.json";
 import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.json";
@@ -12,6 +12,8 @@ import * as axios from "axios";
 export default function Home() {
   const [loadingState, setLoadingState] = useState("not-loaded");
   const [nfts, setNfts] = useState([]);
+  const [isLoading,setLoader] = useState(false)
+
   const [account, setAccount] = useState(null);
   useEffect(() => {
     checkNetwork();
@@ -81,7 +83,7 @@ export default function Home() {
     setLoadingState("loaded");
   };
 
-  const buyNft = async (marketId, price) => {
+  const buyNft = async (seller,marketId, price) => {
     // console.log(a);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -111,17 +113,21 @@ export default function Home() {
     console.log("->>", chackUserApprovel);
     if (chackUserApprovel == true) {
       let marketContract = await MarketContract.buynft(
-        owner,
+        seller,
         to,
         marketId,
         price,
         marketId - 1
       );
-      console.log(marketContract);
+      setLoader(true)
+      console.log(await marketContract.wait());
+      setLoader(false)    
     } else {
       console.log(chackUserApprovel);
     }
   };
+
+  if(isLoading) return <div className={styles.loader}></div>
 
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
@@ -151,7 +157,7 @@ export default function Home() {
                   className="w-full bg-blue-500 text-white font-bold py-2 px-12 rounded"
                   onClick={() => {
                     if (nft.buttonTital != "Owned By you") {
-                      buyNft(nft.nftId, nft.price);
+                      buyNft(nft.seller,nft.nftId, nft.price);
                     }
                   }}
                 >
