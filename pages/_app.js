@@ -1,5 +1,4 @@
 import "../styles/globals.css";
-// import '../styles/load.css'
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Web3Modal from "web3modal";
@@ -7,62 +6,38 @@ import { ethers } from "ethers";
 import { nftaddress, nftmarketaddress } from "../config";
 import Market from "../artifacts/contracts/NFT_Market.sol/MindDefMarketPlace.json";
 
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
+import WalletConnects from "@walletconnect/web3-provider";
+import { providers } from "ethers"
 
 function MyApp({ Component, pageProps }) {
   const [account, setAccount] = useState(null);
+  const [connectors, setConnector] = useState(null);
+
   const [ownerAccount, setOwnerAccount] = useState(null);
 
   useEffect(() => {
-    walletconnect();
+    getAccount();
+    connectWCManual();
   });
 
-  const walletconnect = async () => {
-    console.log("walletconnect");
-    // Create a connector
-    const connector = new WalletConnect({
-      bridge: "https://bridge.walletconnect.org", // Required
-      qrcodeModal: QRCodeModal,
-    });
-
-    // Check if connection is already established
-    if (!connector.connected) {
-      // create new session
-      connector.createSession();
+  const connectWCManual = async () => {
+    if(!account){
+      try {
+        const wcProvider = new WalletConnects({
+          infuraId: "7a04f5a9200041c8b82445299e76ea16",
+          qrcode: true
+        });
+        await wcProvider.enable();
+        const ethers = new providers.Web3Provider(wcProvider);
+        console.log(await ethers.getBalance("ricmoo.eth"));
+        console.log("Successfully connected to WC", wcProvider.accounts);
+        setAccount(wcProvider.accounts)
+        return wcProvider;
+      } catch (e) {
+        console.log("Error connecting WC:", e);
+        throw e;
+      }
     }
-    // Subscribe to connection events
-    connector.on("connect", (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      // Get provided accounts and chainId
-      const { accounts, chainId } = payload.params[0];
-      console.log("connect", accounts, chainId);
-      setAccount(accounts);
-    });
-
-    connector.on("session_update", (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      // Get updated accounts and chainId
-      const { accounts, chainId } = payload.params[0];
-      console.log(accounts, chainId);
-    });
-
-    connector.on("disconnect", (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      // Delete connector
-    });
-
-    const { accounts, chainId } = await connector.connect();
-    console.log(accounts, chainId);
   };
   const getAccount = async () => {
     const web3Modal = new Web3Modal();
