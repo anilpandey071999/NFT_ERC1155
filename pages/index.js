@@ -182,7 +182,7 @@ export default function Home() {
       Window.w3 = web3Provider;
 
       let account = await web3Provider.eth.getAccounts();
-      console.log(account[0]);
+      // console.log(account[0]);
       let TokenContract = new Window.w3.eth.Contract(NFT.abi,nftaddress);
       let chackUserApprovel = await TokenContract.methods.isApprovedForAll(
         account[0],
